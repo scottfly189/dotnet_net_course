@@ -21,7 +21,7 @@
   - IHttpClientFactory的优势和使用场景
   - 连接池和性能优化
 
-- **同源策略与跨域Cross**
+- **同源策略与跨域CORS**
   - 浏览器的同源策略机制
   - CORS跨域资源共享
   - 服务端CORS配置
@@ -124,7 +124,7 @@ dotnet_net_course/
 ### 运行示例
 ```bash
 # 克隆仓库
-git clone https://github.com/your-username/dotnet_net_course.git
+git clone https://github.com/scottfly189/dotnet_net_course.git
 
 # 进入项目目录
 cd dotnet_net_course
