@@ -14,7 +14,7 @@ public class UserController : ControllerBase
         return user != null ? Ok(JsonSerializer.Serialize(user)) : NotFound($"User with id {id} not found.");
     }
 
-    [HttpGet]
+    [HttpGet("{id}")]
     public IActionResult GetUserById(long id)
     {
         var userList = UserDemo.UserList();
