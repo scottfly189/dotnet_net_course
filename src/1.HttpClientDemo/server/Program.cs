@@ -34,73 +34,78 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
-//1. query
-app.MapGet("/user", (long id,string name) =>
-{
-    var userList = UserDemo.UserList();
-    var user = userList.FirstOrDefault(u => u.Id == id && u.Name == name);
-    return JsonSerializer.Serialize(user ?? throw new ArgumentException($"User with id {id} not found."));
-});
-//2. parameter
-app.MapGet("/user/{id}", (long id) =>
-{
-    var userList = UserDemo.UserList();
-    var user = userList.FirstOrDefault(u => u.Id == id);
-    return JsonSerializer.Serialize(user ?? throw new ArgumentException($"User with id {id} not found."));
-});
-//3. post 增加
-app.MapPost("/user", (UserDemo user) =>
-{
-    var userList = UserDemo.UserList();
-    if (userList.Any(u => u.Id == user.Id))
-    {
-        throw new ArgumentException($"User with id {user.Id} already exists.");
-    }
-    userList.Add(user);
-    return HttpStatusCode.Created;
-});
-//4. put 全量更新
-app.MapPut("/user/{id}", (long id, UserDemo user) =>
-{
-    var userList = UserDemo.UserList();
-    var existingUser = userList.FirstOrDefault(u => u.Id == id);
-    if (existingUser == null)
-    {
-        throw new ArgumentException($"User with id {id} not found.");
-    }
-    existingUser.Name = user.Name;
-    existingUser.Email = user.Email;
-    return HttpStatusCode.OK;
-});
-//5. patch 部分更新
-app.MapPatch("/user/{id}", (long id, UserDemo user) =>
-{
-    var userList = UserDemo.UserList();
-    var existingUser = userList.FirstOrDefault(u => u.Id == id);
-    if (existingUser == null)
-    {
-        throw new ArgumentException($"User with id {id} not found.");
-    }
-    if (!string.IsNullOrEmpty(user.Name))
-    {
-        existingUser.Name = user.Name;
-    }
-    if (!string.IsNullOrEmpty(user.Email))
-    {
-        existingUser.Email = user.Email;
-    }
-    return HttpStatusCode.OK;
-});
-//6.delete
-app.MapDelete("/user/{id}", (long id) =>
-{
-    var userList = UserDemo.UserList();
-    var user = userList.FirstOrDefault(u => u.Id == id);
-    if (user == null)
-    {
-        throw new ArgumentException($"User with id {id} not found.");
-    }
-    userList.Remove(user);
-    return HttpStatusCode.NoContent;
-});
+#region Map方式接收请求
+
+// //1. query
+// app.MapGet("/user", (long id,string name) =>
+// {
+//     var userList = UserDemo.UserList();
+//     var user = userList.FirstOrDefault(u => u.Id == id && u.Name == name);
+//     return JsonSerializer.Serialize(user ?? throw new ArgumentException($"User with id {id} not found."));
+// });
+// //2. parameter
+// app.MapGet("/user/{id}", (long id) =>
+// {
+//     var userList = UserDemo.UserList();
+//     var user = userList.FirstOrDefault(u => u.Id == id);
+//     return JsonSerializer.Serialize(user ?? throw new ArgumentException($"User with id {id} not found."));
+// });
+// //3. post 增加
+// app.MapPost("/user", (UserDemo user) =>
+// {
+//     var userList = UserDemo.UserList();
+//     if (userList.Any(u => u.Id == user.Id))
+//     {
+//         throw new ArgumentException($"User with id {user.Id} already exists.");
+//     }
+//     userList.Add(user);
+//     return HttpStatusCode.Created;
+// });
+// //4. put 全量更新
+// app.MapPut("/user/{id}", (long id, UserDemo user) =>
+// {
+//     var userList = UserDemo.UserList();
+//     var existingUser = userList.FirstOrDefault(u => u.Id == id);
+//     if (existingUser == null)
+//     {
+//         throw new ArgumentException($"User with id {id} not found.");
+//     }
+//     existingUser.Name = user.Name;
+//     existingUser.Email = user.Email;
+//     return HttpStatusCode.OK;
+// });
+// //5. patch 部分更新
+// app.MapPatch("/user/{id}", (long id, UserDemo user) =>
+// {
+//     var userList = UserDemo.UserList();
+//     var existingUser = userList.FirstOrDefault(u => u.Id == id);
+//     if (existingUser == null)
+//     {
+//         throw new ArgumentException($"User with id {id} not found.");
+//     }
+//     if (!string.IsNullOrEmpty(user.Name))
+//     {
+//         existingUser.Name = user.Name;
+//     }
+//     if (!string.IsNullOrEmpty(user.Email))
+//     {
+//         existingUser.Email = user.Email;
+//     }
+//     return HttpStatusCode.OK;
+// });
+// //6.delete
+// app.MapDelete("/user/{id}", (long id) =>
+// {
+//     var userList = UserDemo.UserList();
+//     var user = userList.FirstOrDefault(u => u.Id == id);
+//     if (user == null)
+//     {
+//         throw new ArgumentException($"User with id {id} not found.");
+//     }
+//     userList.Remove(user);
+//     return HttpStatusCode.NoContent;
+// });
+#endregion
+
+
 app.Run();
