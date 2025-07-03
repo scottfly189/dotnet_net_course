@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cors</title>
+</head>
+<body>
+    <button class="button01">test cors 01 - default policy</button>
+    <button style="margin-left:20px;" class="button02">test cors 02 - named policy</button>
+
+    <button style="margin-left:20px;" class="button03">test cors 03 - custom config</button>
+
+    <script type="text/javascript">
+        document.querySelector('.button01').addEventListener('click', () => {
+            fetch('http://localhost:5273/weatherforecast')
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        });
+
+        document.querySelector('.button02').addEventListener('click', () => {
+            fetch('http://localhost:5273/api/test')
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        });
+
+        document.querySelector('.button03').addEventListener('click', () => {
+            fetch('http://localhost:5157/api/test/1')
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        });
+
+    </script>
+</body>
+</html>
