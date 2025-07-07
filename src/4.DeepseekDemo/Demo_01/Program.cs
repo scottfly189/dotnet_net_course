@@ -5,15 +5,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 // 正确配置HttpClient
 builder.Services.AddHttpClient<DeepSeekHttpService>(client =>
 {
-    client.BaseAddress = new Uri("https://api.deepseek.com/chat/completions");
-    client.DefaultRequestHeaders.Add("Authorization", "Bearer sk-1234567890");
+    var apiKey = Environment.GetEnvironmentVariable("sk_dk_api");
+    client.BaseAddress = new Uri("https://api.deepseek.com");
+    client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 });
 
 
@@ -23,8 +22,6 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

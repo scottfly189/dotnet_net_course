@@ -1,52 +1,11 @@
 @Demo_01_HostAddress = http://localhost:5175
 
-GET {{Demo_01_HostAddress}}/weatherforecast/
-Accept: application/json
-
-### 测试HttpMessageHandler单例特性
-GET {{Demo_01_HostAddress}}/api/HttpClientTest/test
-Accept: application/json
-
-###
-
-### 测试多个HttpClient实例的HttpMessageHandler
-GET {{Demo_01_HostAddress}}/api/HttpClientTest/test-multiple
-Accept: application/json
-
-###
-
-### 使用现代方法测试HttpMessageHandler
-GET {{Demo_01_HostAddress}}/api/HttpClientTest/test-modern
-Accept: application/json
-
-###
-
 ### 测试聊天接口 - 非流式
-POST {{Demo_01_HostAddress}}/api/Chat
-Content-Type: application/json
-
-{
-  "model": "deepseek-chat",
-  "messages": [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "Hello!"}
-  ],
-  "stream": false
-}
+GET {{Demo_01_HostAddress}}/api/chat/v1/normalchat?message=什么是deepseek
 
 ###
 
 ### 测试聊天接口 - 流式
-POST {{Demo_01_HostAddress}}/api/Chat/stream
-Content-Type: application/json
-
-{
-  "model": "deepseek-chat",
-  "messages": [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "Hello!"}
-  ],
-  "stream": true
-}
+GET {{Demo_01_HostAddress}}/api/chat/v1/streamchat?message=什么是deepseek
 
 ###

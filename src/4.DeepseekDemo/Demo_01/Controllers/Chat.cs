@@ -22,9 +22,14 @@ public class ChatController : ControllerBase
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPost]
-    public async Task<string> Chat([FromBody] DeepSeekRequest request)
+    [HttpGet("v1/normalchat")]
+    public async Task<string> Chat(string message)
     {
+        var request = new DeepSeekRequest();
+        request.Model = "deepseek-chat";
+        request.Stream = false;
+        request.Messages.Add(new Message { Role = "system", Content = "你是一个AI助手，请回答用户的问题。" });
+        request.Messages.Add(new Message { Role = "user", Content = message });
         return await _deepSeekHttpService.GetDeepSeekResponse(request);
     }
 
@@ -33,9 +38,15 @@ public class ChatController : ControllerBase
     /// </summary>
     /// <param name="request"></param>
     /// <returns></returns>
-    [HttpPost("stream")]
-    public async Task<string> Stream([FromBody] DeepSeekRequest request)
+    [HttpGet("v1/streamchat")]
+    public async Task<string> Stream(string message)
     {
+        var request = new DeepSeekRequest();
+        request.Model = "deepseek-chat";
+        request.Stream = true;
+        request.Messages.Add(new Message { Role = "system", Content = "你是一个AI助手，请回答用户的问题。" });
+        request.Messages.Add(new Message { Role = "user", Content = message });
+
         return await _deepSeekHttpService.GetDeepSeekResponseStream(request);
     }
 }
