@@ -1,5 +1,48 @@
 <script setup>
+import { onMounted, onUnmounted } from 'vue';
 import HelloWorld from './components/HelloWorld.vue'
+
+let eventSource = null;
+const userId = 1;
+const token = '1234567890';
+
+const initSSEConnection = () => {
+  if (eventSource) {
+    eventSource.close();
+  }
+  eventSource = new EventSource(`http://localhost:5175/api/SseService/TestClientStream/${token}?userId=${userId}`);
+  // eventSource.onmessage = (event) => {
+  //   console.log(event.data);
+  //   //console.log(eventSource);
+  // }
+  // eventSource.onerror = (event) => {
+  //   console.error('EventSource failed:', event.data);
+  // }
+  // eventSource.onopen = () => {
+  //   console.log('EventSource opened');
+  // }
+  eventSource.addEventListener('message', (event) => {
+    console.log("message:",event.data);
+  });
+  eventSource.addEventListener('error', (event) => {
+    console.error('EventSource failed:', event.data);
+  });
+  eventSource.addEventListener('open', () => {  
+    console.log('EventSource opened');
+  });
+}
+
+onMounted(() => {
+  initSSEConnection();
+})
+
+onUnmounted(() => {
+  if (eventSource) {
+    eventSource.close();
+    eventSource = null;
+  }
+})
+
 </script>
 
 <template>
