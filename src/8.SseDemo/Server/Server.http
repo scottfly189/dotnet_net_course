@@ -3,4 +3,10 @@
 GET {{Server_HostAddress}}/weatherforecast/
 Accept: application/json
 
+
+###
+GET {{Server_HostAddress}}/api/SseService/TestServerSend?userId=1&message=你好世界
+Accept: "*/*"
+
+
 ###
