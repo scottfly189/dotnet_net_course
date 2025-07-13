@@ -36,7 +36,7 @@ public class SseServiceController : ControllerBase
             while (!cancellationToken.IsCancellationRequested)
             {
                 // Simulate sending an event every second
-                await Task.Delay(1000, cancellationToken);
+                await Task.Delay(5000, cancellationToken);
 
                 // Send a simple event
                 await Response.WriteAsync($"data: send data from sse server\n\n", cancellationToken);
@@ -71,7 +71,7 @@ public class SseServiceController : ControllerBase
     [HttpGet("{token}")]
     public async Task TestServerStream(string token, long userId, CancellationToken cancellationToken)
     {
-        CheckAuthentication(token);  //JWT验证或其他认证方式
+        CheckAuthentication(token);  //JWT验证或者cookie认证方式
         //SSE要求返回的Content-Type为text/event-stream
         Response.Headers.Append("Content-Type", "text/event-stream");  //重要
         Response.Headers.Append("Cache-Control", "no-cache");
@@ -98,12 +98,26 @@ public class SseServiceController : ControllerBase
                 cancellationToken.ThrowIfCancellationRequested();
                 //2.发送自定义消息
                 await Response.WriteAsync($"event:chat\n", cancellationToken);
-                await Response.WriteAsync($"data: {message}\n\n", cancellationToken);
+                string[] messageParts = message.Split(new[] { '\n' });
+                int index = 0;
+                messageParts.ToList().ForEach(part =>
+                {
+                    index++;
+                    if (index == messageParts.Length)
+                    {
+                        Response.WriteAsync($"data: {part}\n\n", cancellationToken);
+                    }
+                    else
+                    {
+                        Response.WriteAsync($"data: {part}\n", cancellationToken);
+                    }
+                });
                 await Response.Body.FlushAsync(cancellationToken);
             }
         }
         catch (OperationCanceledException)
         {
+            _sseChannelManager.Unregister(userId);
             // Handle cancellation gracefully
             Response.StatusCode = 499; // Client Closed Request
         }
@@ -113,21 +127,20 @@ public class SseServiceController : ControllerBase
             Response.StatusCode = 500; // Internal Server Error
             await Response.WriteAsync($"data: Error occurred: {ex.Message}\n\n", cancellationToken);
         }
-
+        await Task.CompletedTask;
     }
 
     /// <summary>
     /// 测试后端发送消息
     /// 通过SseChannelManager向指定用户发送消息
     /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="message"></param>
+    /// <param name="input"></param>
     /// <param name="cancellationToken"></param>
-    [HttpGet]
-    public async void TestServerSend(long userId, string message, CancellationToken cancellationToken)
+    [HttpPost]
+    public async void TestServerSend(SseInput input, CancellationToken cancellationToken)
     {
         //向指定用户发送消息
-        await _sseChannelManager.SendMessageAsync(userId, message, cancellationToken);
+        await _sseChannelManager.SendMessageAsync(input.UserId, input.message, cancellationToken);
     }
 
     private void CheckAuthentication(string token)
@@ -139,3 +152,4 @@ public class SseServiceController : ControllerBase
         throw new UnauthorizedAccessException("Invalid token");
     }
 }
+

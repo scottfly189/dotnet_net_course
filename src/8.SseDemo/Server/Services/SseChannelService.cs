@@ -11,7 +11,7 @@ public class SseChannelService
     private readonly ConcurrentDictionary<long, Channel<string>> _userChanners = new();
 
     /// <summary>
-    /// 注册用户
+    /// 注册用户,返回Channel的Reader
     /// </summary>
     /// <param name="userId"></param>
     /// <returns></returns>

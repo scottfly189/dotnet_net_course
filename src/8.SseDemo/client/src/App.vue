@@ -10,8 +10,8 @@ const initSSEConnection = () => {
   if (eventSource) {
     eventSource.close();
   }
-  eventSource = new EventSource(`http://localhost:5175/api/SseService/TestClientStream/${token}?userId=${userId}`);
-  //eventSource = new EventSource(`http://localhost:5175/api/SseService/TestServerStream/${token}?userId=${userId}`);
+  //eventSource = new EventSource(`http://localhost:5175/api/SseService/TestClientStream/${token}?userId=${userId}`);
+  eventSource = new EventSource(`http://localhost:5175/api/SseService/TestServerStream/${token}?userId=${userId}`);
   // eventSource.onmessage = (event) => {
   //   console.log(event.data);
   //   //console.log(eventSource);
